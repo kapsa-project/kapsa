@@ -71,13 +71,13 @@ crds:
 
 # kpack configuration (if bundled as dependency)
 kpack:
-  enabled: false
+  enabled: true
   # If kpack is pre-installed, Kapsa will use it
   # namespace: kpack
 
 # cert-manager configuration (if bundled as dependency)
 certManager:
-  enabled: false
+  enabled: true
   # If cert-manager is pre-installed, Kapsa will use it
   # namespace: cert-manager
   installCRDs: true
