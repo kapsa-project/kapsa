@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kapsa-operator-config
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app.kubernetes.io/name: kapsa-operator
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  config.yaml: |
+    operator:
+      logging:
+        level: {{ .Values.operator.logging.level }}
+        format: {{ .Values.operator.logging.format }}
+      reconciliation:
+        defaultPollInterval: {{ .Values.operator.reconciliation.defaultPollInterval }}
+        resyncPeriod: {{ .Values.operator.reconciliation.resyncPeriod }}
+      metrics:
+        enabled: {{ .Values.operator.metrics.enabled }}
+        port: {{ .Values.operator.metrics.port }}
+        path: {{ .Values.operator.metrics.path }}

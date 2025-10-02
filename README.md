@@ -102,20 +102,30 @@ See [docs/architecture/](docs/architecture/) for detailed architecture documenta
 
 ### Prerequisites
 
-- Kubernetes cluster (e1.30)
-- cert-manager installed
+- Kubernetes cluster (≥1.30)
+- Helm 3.x
 - kpack installed
+- cert-manager installed
 - Container registry (Harbor, GitLab, etc.)
+
+### Installation
+
+Install Kapsa using Helm:
+
+```bash
+# Install prerequisites (if not already installed)
+kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.13.3/release-0.13.3.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
+
+# Install Kapsa
+helm install kapsa ./helm/kapsa
+```
+
+For detailed installation instructions, see [Installation Guide](docs/installation.md).
 
 ### Platform Admin Setup
 
-1. **Install Kapsa Operator**
-
-   ```bash
-   kubectl apply -f https://github.com/yourorg/kapsa/releases/latest/operator.yaml
-   ```
-
-2. **Create a DomainPool**
+1. **Create a DomainPool**
 
    ```yaml
    apiVersion: kapsa.io/v1alpha1
@@ -132,7 +142,7 @@ See [docs/architecture/](docs/architecture/) for detailed architecture documenta
        challengeType: http01
    ```
 
-3. **Create a Registry**
+2. **Create a Registry**
 
    ```yaml
    apiVersion: kapsa.io/v1alpha1
@@ -211,6 +221,8 @@ See [docs/architecture/](docs/architecture/) for detailed architecture documenta
 
 ## Documentation
 
+- **[Installation Guide](docs/installation.md)**: Detailed installation and setup instructions
+- **[Helm Chart](helm/kapsa/README.md)**: Helm chart documentation and configuration
 - **[Vision](docs/project/vision.md)**: Project goals, use cases, roadmap
 - **[Architecture](docs/architecture/)**: System design, components, CRD schemas, sequence diagrams
 - **[ADRs](docs/adr/)**: Architecture Decision Records (001-015)

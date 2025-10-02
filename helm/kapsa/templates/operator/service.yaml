@@ -1,0 +1,22 @@
+{{- if .Values.operator.metrics.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: kapsa-operator-metrics
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app.kubernetes.io/name: kapsa-operator
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: metrics
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.operator.metrics.port }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    app.kubernetes.io/name: kapsa-operator
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

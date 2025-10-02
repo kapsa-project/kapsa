@@ -1,0 +1,39 @@
+apiVersion: v2
+name: kapsa
+description: Kubernetes-native deployment platform with push-to-deploy simplicity
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+kubeVersion: ">=1.30.0-0"
+
+keywords:
+  - kubernetes
+  - deployment
+  - paas
+  - platform
+  - ci-cd
+  - buildpacks
+
+home: https://github.com/yourorg/kapsa
+sources:
+  - https://github.com/yourorg/kapsa
+
+maintainers:
+  - name: Kapsa Team
+    email: maintainers@kapsa.io
+
+# Dependencies (optional - can be installed separately)
+dependencies:
+  # kpack is required for building images
+  # Uncomment to bundle kpack with Kapsa
+  # - name: kpack
+  #   version: "0.13.0"
+  #   repository: "https://github.com/buildpacks-community/kpack/releases"
+  #   condition: kpack.enabled
+
+  # cert-manager is required for TLS
+  # Uncomment to bundle cert-manager with Kapsa
+  # - name: cert-manager
+  #   version: "v1.15.0"
+  #   repository: "https://charts.jetstack.io"
+  #   condition: certManager.enabled
