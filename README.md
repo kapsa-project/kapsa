@@ -35,19 +35,19 @@ spec:
 
 Kapsa automatically:
 
--  Builds container images in-cluster (Dockerfile or Buildpacks)
--  Pushes to your configured registry (Harbor, GitLab, etc.)
--  Deploys to Kubernetes with rolling updates
--  Provisions TLS certificates via cert-manager
--  Exposes applications with valid HTTPS domains
--  Creates ephemeral preview environments for feature branches
+- Builds container images in-cluster (Dockerfile or Buildpacks)
+- Pushes to your configured registry (Harbor, GitLab, etc.)
+- Deploys to Kubernetes with rolling updates
+- Provisions TLS certificates via cert-manager
+- Exposes applications with valid HTTPS domains
+- Creates ephemeral preview environments for feature branches
 
 ## Key Features
 
 ### Developer Experience
 
 - **Single CRD interface**: `kubectl apply -f project.yaml` is all it takes
-- **Auto-sync deployments**: Push to git � automatic builds and deployments
+- **Auto-sync deployments**: Push to git ➡️ automatic builds and deployments
 - **Preview environments**: Ephemeral environments for every feature branch
 - **Zero config builds**: Automatic runtime detection via Cloud Native Buildpacks
 
@@ -78,21 +78,21 @@ Kapsa is built on four core Custom Resource Definitions:
 
 ### How It Works
 
-```
+```txt
 Developer creates Project CRD
-         �
+         ⬇️
 Operator polls git repository
-         �
+         ⬇️
 On source change: trigger kpack build
-         �
-kpack builds image � pushes to Registry
-         �
+         ⬇️
+kpack builds image ➡️ pushes to Registry
+         ⬇️
 Operator creates Environment CRDs
-         �
-Environment � Deployment, Service, Ingress
-         �
+         ⬇️
+Environment ➡️ Deployment, Service, Ingress
+         ⬇️
 cert-manager provisions TLS certificate
-         �
+         ⬇️
 Application live at allocated domain
 ```
 
@@ -133,6 +133,7 @@ See [docs/architecture/](docs/architecture/) for detailed architecture documenta
    ```
 
 3. **Create a Registry**
+
    ```yaml
    apiVersion: kapsa.io/v1alpha1
    kind: Registry
@@ -219,14 +220,14 @@ See [docs/architecture/](docs/architecture/) for detailed architecture documenta
 
 ### v1 (MVP - v1alpha1)
 
--  Architecture and design complete
-- � Operator implementation (Python + Kopf)
-- � kpack integration for builds
-- � Environment reconciliation (Deployment, Service, Ingress)
-- � Domain allocation from DomainPool
-- � cert-manager TLS integration
-- � Preview environment lifecycle management
-- � Git repository polling
+- Architecture and design complete
+- Operator implementation (Python + Kopf)
+- kpack integration for builds
+- Environment reconciliation (Deployment, Service, Ingress)
+- Domain allocation from DomainPool
+- cert-manager TLS integration
+- Preview environment lifecycle management
+- Git repository polling
 
 ### Future
 

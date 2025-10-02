@@ -319,30 +319,30 @@ status:
 
 ## CRD Relationships
 
-```
+```txt
 DomainPool (cluster-scoped)
-    �
+    |
     | referenced by
     |
 Project (namespace-scoped)
     | creates
-    �
+    |
 Environment (namespace-scoped)
     | creates
-    �
+    |
 Deployment, Service, Ingress (Kubernetes core)
 
 
 Registry (cluster-scoped)
-    �
+    |
     | referenced by
     |
 Project
     | triggers
-    �
+    |
 kpack Image (namespace-scoped)
     | pushes to
-    �
+    |
 Container Registry (external)
 ```
 
