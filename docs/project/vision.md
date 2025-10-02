@@ -2,32 +2,32 @@
 
 ## Project Description
 
-Kapsa is an **open-source, Kubernetes-native alternative to Vercel**.  
-It empowers organizations to provide their developers with a simple way to deploy applications while keeping everything **self-hosted**, **privacy-compliant**, and **modular**.
+Kapsa is an **open-source, Kubernetes-native deployment platform** that brings **push-to-deploy simplicity** to self-hosted infrastructure.
+It empowers organizations to provide their developers with a streamlined deployment experience while maintaining full control over infrastructure, ensuring **privacy compliance**, and integrating with **existing enterprise tooling**.
 
-Developers describe their app using a **single Kubernetes custom resource** (`Project`) with information such as:
+Developers describe their application using a **single Kubernetes custom resource** (`Project`) with declarative configuration:
 
 - Repository location
 - Build strategy (Dockerfile or Buildpacks)
-- Desired environments (e.g., dev, staging, prod)
-- Subdomain name
+- Target environments (e.g., dev, staging, prod)
+- Domain configuration
 
-The system automatically:
+The platform automatically orchestrates:
 
-- Builds the image in-cluster
-- Pushes it to the configured registry
-- Deploys it to Kubernetes
-- Exposes it under a valid TLS domain
-- Optionally creates ephemeral preview environments
+- In-cluster image builds
+- Registry push operations
+- Kubernetes deployments with service exposure
+- TLS certificate provisioning and domain routing
+- Ephemeral preview environments for feature branches
 
 ## Goal
 
-The goal is to offer a **“Vercel-like experience, but self-hosted and Kubernetes-native”**:
+Kapsa delivers a **managed PaaS experience within self-hosted Kubernetes infrastructure**:
 
-- **Simple for developers:** `kubectl apply -f project.yaml` is all it takes.
-- **Flexible for platform teams:** Admins define registries, domains, and ingress controllers once; developers consume them through clean abstractions.
-- **Modular by design:** Works with Harbor, GitLab registry, Vault, ESO, NGINX, cert-manager, and other existing corp-infra components.
-- **Privacy-first:** Runs entirely within the company’s own Kubernetes clusters.
+- **Developer simplicity:** `kubectl apply -f project.yaml` triggers the entire deployment pipeline. No proprietary CLIs, dashboards, or external services required.
+- **Platform team control:** Infrastructure administrators define registries, domain pools, and ingress controllers once; developers consume these resources through clean CRD-based abstractions.
+- **Modular integration:** Built to work with existing corporate infrastructure—Harbor, GitLab Container Registry, HashiCorp Vault, External Secrets Operator, NGINX Ingress, cert-manager, and other standard Kubernetes ecosystem tools.
+- **Privacy and compliance:** Runs entirely within your Kubernetes clusters. No external API calls, no vendor telemetry, full air-gap support for regulated environments.
 
 ## Non-Goals (v1)
 
