@@ -1,5 +1,5 @@
 # Kubernetes operator framework
-kopf==1.37.2
+kopf==1.38.0
 kubernetes==29.0.0
 
 # HTTP client for git operations and webhooks
