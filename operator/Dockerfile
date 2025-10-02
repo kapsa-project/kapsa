@@ -25,23 +25,23 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Create non-root user first
-RUN groupadd -g 1000 operator && \
-    useradd -m -u 1000 -g operator operator
+# Create non-root user first (using 'kapsa' as username since 'operator' group already exists in base image)
+RUN groupadd -g 1000 kapsa && \
+    useradd -m -u 1000 -g kapsa kapsa
 
 # Copy virtual environment from builder
 COPY --from=builder /opt/venv /opt/venv
 
 # Copy application code and set ownership
-COPY --chown=operator:operator src/ ./src/
-COPY --chown=operator:operator setup.py .
+COPY --chown=kapsa:kapsa src/ ./src/
+COPY --chown=kapsa:kapsa setup.py .
 
 # Install the package in the venv
 ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install --no-cache-dir -e .
 
 # Switch to non-root user
-USER operator
+USER kapsa
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
