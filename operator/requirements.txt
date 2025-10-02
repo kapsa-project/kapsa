@@ -1,6 +1,6 @@
 # Kubernetes operator framework
 kopf==1.38.0
-kubernetes==29.0.0
+kubernetes==34.1.0
 
 # HTTP client for git operations and webhooks
 aiohttp==3.9.5
