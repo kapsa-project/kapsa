@@ -143,3 +143,58 @@ This is a **documentation-first project**. The architecture and design are defin
 7. Add observability (structured logging, Prometheus metrics)
 
 The project follows a modular, incremental approach—each component can be developed and tested independently.
+
+## Common Commands
+
+### Helm Chart Development
+
+```bash
+# Lint the Helm chart
+helm lint helm/kapsa
+
+# Template and verify chart rendering
+helm template test-release helm/kapsa --debug
+
+# Test installation in local kind cluster
+kind create cluster --name kapsa-dev
+helm install kapsa helm/kapsa
+kubectl get pods -n kapsa-system
+
+# Cleanup
+helm uninstall kapsa
+kind delete cluster --name kapsa-dev
+```
+
+### Working with CRDs
+
+CRD definitions are located in `helm/kapsa/templates/crds/`:
+- `project.yaml` - Developer-facing application definition
+- `environment.yaml` - Operator-managed environment resources
+- `domainpool.yaml` - Cluster-scoped domain configuration
+- `registry.yaml` - Cluster-scoped registry endpoints
+
+### Operator Development (Future)
+
+The operator directory doesn't exist yet. When implementing:
+
+```bash
+# Set up Python environment
+cd operator
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# Run tests
+pytest
+
+# Build Docker image
+docker build -t kapsa:dev .
+```
+
+### GitHub Actions
+
+The project uses GitHub Actions for CI/CD:
+- `.github/workflows/build-operator.yaml` - Builds and pushes operator image to GHCR
+- `.github/workflows/docs.yaml` - Validates documentation
+
+Images are published to `ghcr.io/kapsa-project/kapsa`.
