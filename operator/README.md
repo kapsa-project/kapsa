@@ -38,8 +38,11 @@ operator/
 ### Prerequisites
 
 - Python 3.11+
-- Access to a Kubernetes cluster
+- Access to a Kubernetes cluster (≥1.30)
 - kubectl configured
+- cert-manager installed (for TLS certificates)
+- kpack installed (for image builds)
+- cert-manager ClusterIssuer configured (e.g., Let's Encrypt)
 
 ### Local Development
 

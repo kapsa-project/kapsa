@@ -113,19 +113,40 @@ See [docs/architecture/](docs/architecture/) for detailed architecture documenta
 Install Kapsa using Helm:
 
 ```bash
-# Install prerequisites (if not already installed)
+# Install Kapsa. Bundles cert-manager and kpack.
+helm install kapsa ./helm/kapsa
+
+# If you choose to not install those deps with kapsa, make sure to do it manually.
 kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.13.3/release-0.13.3.yaml
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
-
-# Install Kapsa
-helm install kapsa ./helm/kapsa
 ```
 
 For detailed installation instructions, see [Installation Guide](docs/installation.md).
 
 ### Platform Admin Setup
 
-1. **Create a DomainPool**
+1. **Create a cert-manager ClusterIssuer** (if not already configured)
+
+   Kapsa requires a ClusterIssuer for automatic TLS certificate provisioning. Create one using Let's Encrypt or your preferred CA:
+
+   ```yaml
+   apiVersion: cert-manager.io/v1
+   kind: ClusterIssuer
+   metadata:
+     name: letsencrypt-prod
+   spec:
+     acme:
+       server: https://acme-v02.api.letsencrypt.org/directory
+       email: admin@example.com
+       privateKeySecretRef:
+         name: letsencrypt-prod
+       solvers:
+         - http01:
+             ingress:
+               class: nginx
+   ```
+
+2. **Create a DomainPool**
 
    ```yaml
    apiVersion: kapsa.io/v1alpha1
@@ -142,7 +163,7 @@ For detailed installation instructions, see [Installation Guide](docs/installati
        challengeType: http01
    ```
 
-2. **Create a Registry**
+3. **Create a Registry**
 
    ```yaml
    apiVersion: kapsa.io/v1alpha1
@@ -271,11 +292,7 @@ Interested in contributing? Check out the [Architecture Documentation](docs/arch
 
 ## License
 
-[Add license here]
-
-## Why "Kapsa"?
-
-Kapsa (:0?A0) is derived from "capsule" in several Slavic languagesfitting for a project that encapsulates applications into self-contained deployments.
+[not decided yet]
 
 ---
 
