@@ -168,6 +168,7 @@ kind delete cluster --name kapsa-dev
 ### Working with CRDs
 
 CRD definitions are located in `helm/kapsa/templates/crds/`:
+
 - `project.yaml` - Developer-facing application definition
 - `environment.yaml` - Operator-managed environment resources
 - `domainpool.yaml` - Cluster-scoped domain configuration
@@ -194,6 +195,7 @@ docker build -t kapsa:dev .
 ### GitHub Actions
 
 The project uses GitHub Actions for CI/CD:
+
 - `.github/workflows/build-operator.yaml` - Builds and pushes operator image to GHCR
 - `.github/workflows/docs.yaml` - Validates documentation
 
