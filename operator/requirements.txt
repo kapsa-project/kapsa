@@ -10,7 +10,7 @@ GitPython==3.1.43
 structlog==24.1.0
 
 # Prometheus metrics
-prometheus-client==0.20.0
+prometheus-client==0.23.1
 
 # Configuration and validation
 pydantic==2.7.1
