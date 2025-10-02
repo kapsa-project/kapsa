@@ -14,9 +14,9 @@ keywords:
   - ci-cd
   - buildpacks
 
-home: https://github.com/yourorg/kapsa
+home: https://github.com/kapsa-project/kapsa
 sources:
-  - https://github.com/yourorg/kapsa
+  - https://github.com/kapsa-project/kapsa
 
 maintainers:
   - name: Kapsa Team

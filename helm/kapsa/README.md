@@ -18,8 +18,11 @@ This Helm chart deploys Kapsa, a Kubernetes-native deployment platform with push
 kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.13.3/release-0.13.3.yaml
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
 
-# Install Kapsa
+# Install Kapsa from local chart
 helm install kapsa ./kapsa
+
+# Or install from GitHub Container Registry
+helm install kapsa oci://ghcr.io/kapsa-project/charts/kapsa --version 0.1.0
 ```
 
 ### Custom Installation
@@ -29,7 +32,7 @@ helm install kapsa ./kapsa
 cat > my-values.yaml <<EOF
 operator:
   image:
-    repository: ghcr.io/myorg/kapsa-operator
+    repository: ghcr.io/kapsa-project/kapsa
     tag: "0.1.0"
 
   replicas: 1

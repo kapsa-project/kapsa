@@ -80,11 +80,11 @@ Install with custom values:
 helm install kapsa ./helm/kapsa -f values.yaml
 ```
 
-### Option 3: Install from OCI Registry (Future)
+### Option 3: Install from GitHub Container Registry
 
 ```bash
-# Once published to a registry
-helm install kapsa oci://ghcr.io/yourorg/charts/kapsa --version 0.1.0
+# Install from GHCR
+helm install kapsa oci://ghcr.io/kapsa-project/charts/kapsa --version 0.1.0
 ```
 
 ## Verify Installation
@@ -420,9 +420,9 @@ curl http://localhost:8080/metrics
 
 1. Pull and push images to internal registry:
    ```bash
-   docker pull ghcr.io/yourorg/kapsa-operator:0.1.0
-   docker tag ghcr.io/yourorg/kapsa-operator:0.1.0 internal-registry.corp.com/kapsa-operator:0.1.0
-   docker push internal-registry.corp.com/kapsa-operator:0.1.0
+   docker pull ghcr.io/kapsa-project/kapsa:0.1.0
+   docker tag ghcr.io/kapsa-project/kapsa:0.1.0 internal-registry.corp.com/kapsa:0.1.0
+   docker push internal-registry.corp.com/kapsa:0.1.0
    ```
 
 2. Configure Helm values:

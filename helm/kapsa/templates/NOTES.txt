@@ -85,7 +85,7 @@ Next steps:
    EOF
 
 Documentation:
-  - Architecture: https://github.com/yourorg/kapsa/tree/main/docs/architecture
-  - ADRs: https://github.com/yourorg/kapsa/tree/main/docs/adr
+  - Architecture: https://github.com/kapsa-project/kapsa/tree/main/docs/architecture
+  - ADRs: https://github.com/kapsa-project/kapsa/tree/main/docs/adr
 
-For more information, visit: {{ .Chart.Home }}
+For more information, visit: https://github.com/kapsa-project/kapsa
