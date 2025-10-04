@@ -1,0 +1,222 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: environments.kapsa-project.io
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  group: kapsa-project.io
+  names:
+    kind: Environment
+    listKind: EnvironmentList
+    plural: environments
+    singular: environment
+    shortNames:
+      - env
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required:
+                - projectRef
+                - type
+              properties:
+                projectRef:
+                  type: object
+                  required:
+                    - name
+                  properties:
+                    name:
+                      type: string
+                type:
+                  type: string
+                  enum:
+                    - permanent
+                    - preview
+                branch:
+                  type: string
+                runtime:
+                  type: object
+                  properties:
+                    replicas:
+                      type: integer
+                      minimum: 0
+                      default: 1
+                    resources:
+                      type: object
+                      properties:
+                        limits:
+                          type: object
+                          additionalProperties:
+                            type: string
+                        requests:
+                          type: object
+                          additionalProperties:
+                            type: string
+                    autoscaling:
+                      type: object
+                      properties:
+                        enabled:
+                          type: boolean
+                          default: false
+                        minReplicas:
+                          type: integer
+                          minimum: 1
+                        maxReplicas:
+                          type: integer
+                          minimum: 1
+                        targetCPUUtilization:
+                          type: integer
+                          minimum: 1
+                          maximum: 100
+                        targetMemoryUtilization:
+                          type: integer
+                          minimum: 1
+                          maximum: 100
+                    ports:
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - containerPort
+                        properties:
+                          name:
+                            type: string
+                          containerPort:
+                            type: integer
+                            minimum: 1
+                            maximum: 65535
+                          protocol:
+                            type: string
+                            enum:
+                              - TCP
+                              - UDP
+                            default: TCP
+                ingress:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                      default: true
+                    host:
+                      type: string
+                    path:
+                      type: string
+                      default: /
+                    tls:
+                      type: object
+                      properties:
+                        enabled:
+                          type: boolean
+                          default: true
+                        secretName:
+                          type: string
+                    annotations:
+                      type: object
+                      additionalProperties:
+                        type: string
+                configRefs:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      configMapRef:
+                        type: object
+                        required:
+                          - name
+                        properties:
+                          name:
+                            type: string
+                secretRefs:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      secretRef:
+                        type: object
+                        required:
+                          - name
+                        properties:
+                          name:
+                            type: string
+                env:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - value
+                    properties:
+                      name:
+                        type: string
+                      value:
+                        type: string
+            status:
+              type: object
+              properties:
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - type
+                      - status
+                    properties:
+                      type:
+                        type: string
+                      status:
+                        type: string
+                      reason:
+                        type: string
+                      message:
+                        type: string
+                      lastTransitionTime:
+                        type: string
+                        format: date-time
+                phase:
+                  type: string
+                  enum:
+                    - Pending
+                    - Building
+                    - Running
+                    - Failed
+                image:
+                  type: string
+                resources:
+                  type: object
+                  properties:
+                    deploymentName:
+                      type: string
+                    serviceName:
+                      type: string
+                    ingressName:
+                      type: string
+                urls:
+                  type: array
+                  items:
+                    type: string
+                expiresAt:
+                  type: string
+                  format: date-time
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Type
+          type: string
+          jsonPath: .spec.type
+        - name: Phase
+          type: string
+          jsonPath: .status.phase
+        - name: URL
+          type: string
+          jsonPath: .status.urls[0]
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp

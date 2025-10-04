@@ -1,0 +1,116 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: registries.kapsa-project.io
+  annotations:
+    helm.sh/resource-policy: keep
+spec:
+  group: kapsa-project.io
+  names:
+    kind: Registry
+    listKind: RegistryList
+    plural: registries
+    singular: registry
+    shortNames:
+      - reg
+  scope: Cluster
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required:
+                - type
+                - endpoint
+                - auth
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - harbor
+                    - gitlab
+                    - docker
+                    - ecr
+                    - gcr
+                    - acr
+                  description: Registry type
+                endpoint:
+                  type: string
+                  description: Registry URL
+                auth:
+                  type: object
+                  required:
+                    - secretRef
+                  properties:
+                    secretRef:
+                      type: object
+                      required:
+                        - name
+                      properties:
+                        name:
+                          type: string
+                        namespace:
+                          type: string
+                options:
+                  type: object
+                  description: Registry-specific configuration
+                  additionalProperties:
+                    type: string
+                imagePullSecret:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Secret name to create in project namespaces
+                    generatePerNamespace:
+                      type: boolean
+                      default: true
+                      description: Create copy in each project namespace
+            status:
+              type: object
+              properties:
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - type
+                      - status
+                    properties:
+                      type:
+                        type: string
+                      status:
+                        type: string
+                      reason:
+                        type: string
+                      message:
+                        type: string
+                      lastTransitionTime:
+                        type: string
+                        format: date-time
+                verified:
+                  type: boolean
+                  description: Registry connectivity verified
+                lastVerified:
+                  type: string
+                  format: date-time
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Type
+          type: string
+          jsonPath: .spec.type
+        - name: Endpoint
+          type: string
+          jsonPath: .spec.endpoint
+        - name: Verified
+          type: boolean
+          jsonPath: .status.verified
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp

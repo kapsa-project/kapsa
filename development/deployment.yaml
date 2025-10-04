@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kapsa-operator
+  namespace: kapsa-system
+  labels:
+    app.kubernetes.io/name: kapsa-operator
+    app.kubernetes.io/component: operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kapsa-operator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kapsa-operator
+        app.kubernetes.io/component: operator
+    spec:
+      serviceAccountName: kapsa-operator
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: operator
+          image: kapsa-operator:latest
+          imagePullPolicy: Never
+          env:
+            - name: KAPSA_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: KAPSA_LOG_LEVEL
+              value: debug
+            - name: KAPSA_LOG_FORMAT
+              value: text
+            - name: KAPSA_DEFAULT_POLL_INTERVAL
+              value: "300"
+            - name: KAPSA_RESYNC_PERIOD
+              value: "600"
+            - name: KAPSA_METRICS_ENABLED
+              value: "true"
+            - name: KAPSA_METRICS_PORT
+              value: "8080"
+          ports:
+            - name: metrics
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: metrics
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
