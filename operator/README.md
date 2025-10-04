@@ -86,14 +86,34 @@ operator/
 # Run all tests
 pytest
 
-# Run with coverage
-pytest --cov=src/kapsa --cov-report=html
+# Run only unit tests
+pytest tests/unit/
 
-# Run specific test file
-pytest tests/unit/test_project.py
+# Run specific controller tests
+pytest tests/unit/test_project_controller.py
+pytest tests/unit/test_environment_controller.py
+pytest tests/unit/test_registry_controller.py
+pytest tests/unit/test_domainpool_controller.py
+
+# Run with coverage
+pytest --cov=src/kapsa --cov-report=html --cov-report=term-missing
 
 # Run with verbose output
 pytest -v
+
+# Run tests matching a pattern
+pytest -k "test_project_created"
+
+# Run tests with specific markers
+pytest -m unit
+```
+
+View coverage report:
+
+```bash
+# Open HTML coverage report
+open htmlcov/index.html  # macOS
+xdg-open htmlcov/index.html  # Linux
 ```
 
 ### Code Quality
@@ -249,23 +269,25 @@ kubectl get environments --all-namespaces
 ### ✅ Implemented
 
 - Basic operator scaffolding with Kopf
-- Project CRD handlers (create/update/delete)
+- All four CRD controllers (Project, Environment, DomainPool, Registry)
+- kpack integration (Image resource creation, ServiceAccount management)
 - Structured logging with structlog
-- Prometheus metrics
 - Configuration management
 - Namespace creation per project
 - Git polling timer (stub)
+- Comprehensive unit test suite
+- Test fixtures and mocking infrastructure
 
 ### 🚧 In Progress / TODO
 
 - Git repository polling and commit detection
-- kpack build integration
-- Environment CRD reconciliation
-- Deployment/Service/Ingress creation
+- Environment → Deployment/Service/Ingress reconciliation
 - Domain allocation from DomainPool
-- Preview environment lifecycle
-- Registry integration
-- Secret management
+- TLS certificate provisioning via cert-manager
+- Preview environment lifecycle management
+- Registry credential validation
+- Secret propagation to project namespaces
+- Integration tests
 
 ## Contributing
 

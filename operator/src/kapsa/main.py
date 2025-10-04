@@ -6,7 +6,10 @@ from kapsa.config import get_settings
 from kapsa.logging import configure_logging, get_logger
 
 # Import controllers (registers handlers)
+from kapsa.controllers import domainpool  # noqa: F401
+from kapsa.controllers import environment  # noqa: F401
 from kapsa.controllers import project  # noqa: F401
+from kapsa.controllers import registry  # noqa: F401
 
 logger = get_logger(__name__)
 

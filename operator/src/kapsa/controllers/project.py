@@ -6,9 +6,10 @@ from typing import Any, Dict, Optional
 import kopf
 from kubernetes import client
 from kubernetes.client.rest import ApiException
+from kubernetes.dynamic import DynamicClient
 
 from kapsa.logging import get_logger
-from kapsa.metrics import project_reconcile_duration, project_reconcile_total, project_total
+from kapsa.utils.kpack import create_kpack_image_spec, create_service_account_spec
 
 logger = get_logger(__name__)
 
@@ -29,11 +30,11 @@ async def project_created(
         repository=spec.get("repository", {}).get("url"),
     )
 
-    # Increment metrics
-    project_total.labels(namespace=namespace).inc()
-
     # Create dedicated namespace for this project
-    await create_project_namespace(name, namespace, meta)
+    project_namespace = await create_project_namespace(name, namespace, meta)
+
+    # Create kpack resources
+    await create_kpack_resources(spec, name, project_namespace, meta)
 
     # Initial status
     return {
@@ -64,48 +65,43 @@ async def project_updated(
         namespace=namespace,
     )
 
-    with project_reconcile_duration.labels(namespace=namespace, project=name).time():
-        try:
-            # Reconcile environments based on spec
-            await reconcile_environments(spec, name, namespace)
+    try:
+        # Reconcile environments based on spec
+        await reconcile_environments(spec, name, namespace)
 
-            # Update status
-            project_reconcile_total.labels(
-                namespace=namespace, project=name, status="success"
-            ).inc()
+        # Reconcile kpack resources
+        project_namespace = f"{name}-ns"
+        await reconcile_kpack_resources(spec, name, project_namespace)
 
-            return {
-                "conditions": [
-                    {
-                        "type": "Ready",
-                        "status": "True",
-                        "reason": "Reconciled",
-                        "message": "Project successfully reconciled",
-                    }
-                ],
-            }
+        return {
+            "conditions": [
+                {
+                    "type": "Ready",
+                    "status": "True",
+                    "reason": "Reconciled",
+                    "message": "Project successfully reconciled",
+                }
+            ],
+        }
 
-        except Exception as e:
-            logger.error(
-                "project_reconcile_failed",
-                project=name,
-                namespace=namespace,
-                error=str(e),
-            )
-            project_reconcile_total.labels(
-                namespace=namespace, project=name, status="error"
-            ).inc()
+    except Exception as e:
+        logger.error(
+            "project_reconcile_failed",
+            project=name,
+            namespace=namespace,
+            error=str(e),
+        )
 
-            return {
-                "conditions": [
-                    {
-                        "type": "Ready",
-                        "status": "False",
-                        "reason": "ReconciliationFailed",
-                        "message": f"Reconciliation failed: {str(e)}",
-                    }
-                ],
-            }
+        return {
+            "conditions": [
+                {
+                    "type": "Ready",
+                    "status": "False",
+                    "reason": "ReconciliationFailed",
+                    "message": f"Reconciliation failed: {str(e)}",
+                }
+            ],
+        }
 
 
 @kopf.on.delete("kapsa-project.io", "v1alpha1", "projects")
@@ -163,7 +159,7 @@ async def project_poll_git(
 
 async def create_project_namespace(
     project_name: str, parent_namespace: str, owner_meta: kopf.Meta
-) -> None:
+) -> str:
     """Create a dedicated namespace for the project."""
     v1 = client.CoreV1Api()
     namespace_name = f"{project_name}-ns"
@@ -197,6 +193,8 @@ async def create_project_namespace(
             )
         else:
             raise
+
+    return namespace_name
 
 
 async def delete_project_namespace(project_name: str, parent_namespace: str) -> None:
@@ -253,3 +251,119 @@ async def reconcile_environments(
             environment=env_name,
             namespace=namespace,
         )
+
+
+async def create_kpack_resources(
+    spec: Dict[str, Any],
+    project_name: str,
+    project_namespace: str,
+    owner_meta: kopf.Meta,
+) -> None:
+    """Create kpack Image and ServiceAccount resources."""
+    v1 = client.CoreV1Api()
+    api_client = client.ApiClient()
+    dyn_client = DynamicClient(api_client)
+
+    # Get repository configuration
+    repository = spec.get("repository", {})
+    git_url = repository.get("url")
+    git_branch = repository.get("branch", "main")
+
+    # Get registry configuration
+    registry_spec = spec.get("registry", {})
+    registry_name = registry_spec.get("name")
+    image_repository = registry_spec.get("imageRepository", f"{project_name}")
+
+    if not git_url:
+        logger.warning(
+            "no_git_url",
+            project=project_name,
+            message="Project does not have a git repository URL",
+        )
+        return
+
+    if not registry_name:
+        logger.warning(
+            "no_registry",
+            project=project_name,
+            message="Project does not specify a registry",
+        )
+        return
+
+    # TODO: Fetch Registry CRD to get actual registry endpoint
+    # For now, use a placeholder
+    image_tag = f"registry.example.com/{image_repository}:latest"
+
+    # Create ServiceAccount with registry credentials
+    service_account_name = f"{project_name}-kpack-sa"
+
+    # TODO: Get docker secret from Registry CRD
+    docker_secret_name = f"{registry_name}-credentials"
+
+    sa_spec = create_service_account_spec(
+        service_account_name, project_namespace, docker_secret_name
+    )
+
+    try:
+        v1.create_namespaced_service_account(project_namespace, sa_spec)
+        logger.info(
+            "service_account_created",
+            project=project_name,
+            namespace=project_namespace,
+            service_account=service_account_name,
+        )
+    except ApiException as e:
+        if e.status == 409:  # Already exists
+            logger.debug("service_account_already_exists", project=project_name)
+        else:
+            raise
+
+    # Create kpack Image resource
+    image_spec = create_kpack_image_spec(
+        name=project_name,
+        namespace=project_namespace,
+        tag=image_tag,
+        git_url=git_url,
+        git_revision=git_branch,
+        service_account=service_account_name,
+        builder="default",  # TODO: Make configurable
+    )
+
+    # Add owner reference
+    image_spec["metadata"]["ownerReferences"] = [
+        {
+            "apiVersion": f"{owner_meta['apiVersion']}",
+            "kind": "Project",
+            "name": owner_meta["name"],
+            "uid": owner_meta["uid"],
+            "controller": True,
+            "blockOwnerDeletion": True,
+        }
+    ]
+
+    try:
+        # Get kpack Image resource
+        kpack_api = dyn_client.resources.get(api_version="kpack.io/v1alpha2", kind="Image")
+        kpack_api.create(namespace=project_namespace, body=image_spec)
+        logger.info(
+            "kpack_image_created",
+            project=project_name,
+            namespace=project_namespace,
+            image=project_name,
+        )
+    except ApiException as e:
+        if e.status == 409:  # Already exists
+            logger.debug("kpack_image_already_exists", project=project_name)
+        else:
+            raise
+
+
+async def reconcile_kpack_resources(
+    spec: Dict[str, Any],
+    project_name: str,
+    project_namespace: str,
+) -> None:
+    """Reconcile kpack resources for the project."""
+    # TODO: Update kpack Image if repository or registry changed
+    # TODO: Handle Image deletion if project no longer needs builds
+    pass

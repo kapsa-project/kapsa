@@ -1,0 +1,1 @@
+"""Tests for Kapsa operator."""
