@@ -55,17 +55,9 @@ Kapsa automatically:
 
 ### Platform Team Control
 
-- **Modular integration**: Works with existing infrastructure (Harbor, GitLab Registry, Vault, ESO, NGINX, cert-manager)
+- **Modular integration**: Works with existing infrastructure (bring your own Git, registries, secret management systems and ingress-controllers)
 - **Namespace isolation**: Each project gets its own namespace with RBAC
 - **Domain management**: Platform admins define base domains; developers get subdomains
-- **Registry abstraction**: Support for Harbor, GitLab, Docker Hub, ECR, GCR, ACR
-
-### Privacy & Compliance
-
-- **Self-hosted**: Runs entirely within your Kubernetes clusters
-- **No external dependencies**: No vendor APIs, no telemetry
-- **Air-gap ready**: Works in disconnected environments
-- **Reference-only secrets**: Integrates with existing secret management (Vault, ESO, Sealed Secrets)
 
 ## Architecture
 
@@ -107,7 +99,7 @@ See [docs/architecture/](docs/architecture/) for detailed architecture documenta
 - Kubernetes cluster (≥1.30)
 - kpack installed
 - cert-manager installed
-- Container registry (Harbor, GitLab, etc.)
+- Container registry
 
 ### Installation
 
@@ -123,8 +115,6 @@ kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download
 # OR install cert-manager separately if you prefer
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.18.2/cert-manager.yaml
 ```
-
-For detailed installation instructions, see [Installation Guide](docs/installation.md).
 
 ### Platform Admin Setup
 
@@ -244,11 +234,9 @@ For detailed installation instructions, see [Installation Guide](docs/installati
 
 ## Documentation
 
-- **[Installation Guide](docs/installation.md)**: Detailed installation and setup instructions
 - **[Vision](docs/project/vision.md)**: Project goals, use cases, roadmap
 - **[Architecture](docs/architecture/)**: System design, components, CRD schemas, sequence diagrams
-- **[ADRs](docs/adr/)**: Architecture Decision Records (001-015)
-- **[CLAUDE.md](CLAUDE.md)**: Development guide for AI-assisted coding
+- **[ADRs](docs/adr/)**: Architecture Decision Records
 
 ## Roadmap
 
@@ -270,16 +258,14 @@ For detailed installation instructions, see [Installation Guide](docs/installati
 - Knative runtime adapter (scale-to-zero)
 - Notification integrations (Slack, GitHub status)
 - Multi-cluster support
-- Web UI and CLI
-- Database/queue provisioning
+- CLI
+- Web UI for developers and admins
 
 ## Non-Goals (v1)
 
 - Database or message queue provisioning
 - Custom notification integrations
-- Web UI or CLI (future work)
 - Multi-cluster federation
-- Pod security policy enforcement (left to cluster admins)
 
 ## Contributing
 
@@ -294,7 +280,3 @@ Interested in contributing? Check out the [Architecture Documentation](docs/arch
 ## License
 
 [not decided yet]
-
----
-
-**Built for platform teams who want to provide a great developer experience without giving up control.**
