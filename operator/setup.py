@@ -8,7 +8,7 @@ setup(
     author_email="",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
-    python_requires=">=3.11",
+    python_requires=">=3.12",
     install_requires=[
         "kopf>=1.37.2",
         "kubernetes>=29.0.0",
