@@ -39,14 +39,6 @@ spec:
               value: "300"
             - name: KAPSA_RESYNC_PERIOD
               value: "600"
-            - name: KAPSA_METRICS_ENABLED
-              value: "true"
-            - name: KAPSA_METRICS_PORT
-              value: "8080"
-          ports:
-            - name: metrics
-              containerPort: 8080
-              protocol: TCP
           resources:
             limits:
               cpu: 500m
@@ -54,18 +46,6 @@ spec:
             requests:
               cpu: 50m
               memory: 64Mi
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: metrics
-            initialDelaySeconds: 15
-            periodSeconds: 20
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: metrics
-            initialDelaySeconds: 5
-            periodSeconds: 10
           volumeMounts:
             - name: tmp
               mountPath: /tmp

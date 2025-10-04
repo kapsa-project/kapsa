@@ -13,6 +13,10 @@ def configure_logging() -> None:
     """Configure structured logging for the operator."""
     settings = get_settings()
 
+    # Convert log level string to numeric level
+    log_level_str = settings.log_level.upper()
+    log_level = getattr(logging, log_level_str, logging.INFO)
+
     # Determine processors based on log format
     if settings.log_format == "json":
         processors = [
@@ -34,9 +38,7 @@ def configure_logging() -> None:
     # Configure structlog
     structlog.configure(
         processors=processors,
-        wrapper_class=structlog.make_filtering_bound_logger(
-            logging.getLevelName(settings.log_level)
-        ),
+        wrapper_class=structlog.make_filtering_bound_logger(log_level),
         context_class=dict,
         logger_factory=structlog.PrintLoggerFactory(file=sys.stdout),
         cache_logger_on_first_use=True,
@@ -46,7 +48,7 @@ def configure_logging() -> None:
     logging.basicConfig(
         format="%(message)s",
         stream=sys.stdout,
-        level=logging.getLevelName(settings.log_level),
+        level=log_level,
     )
 
 

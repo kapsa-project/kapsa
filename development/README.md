@@ -40,8 +40,19 @@ kubectl get pods -n kapsa-system
 
 # View logs
 kubectl logs -n kapsa-system -l app.kubernetes.io/name=kapsa-operator -f
+```
 
-# Check metrics
-kubectl port-forward -n kapsa-system svc/kapsa-operator-metrics 8080:8080
-curl http://localhost:8080/metrics
+## Configuration
+
+- **Image**: `kapsa-operator:latest` (local build)
+- **ImagePullPolicy**: `Never` (uses local image only)
+- **Log Level**: `debug` (verbose logging)
+- **Log Format**: `text` (easier to read than JSON)
+- **Resources**: Lower requests for local testing
+- **Metrics**: Disabled (will be added later)
+
+## Cleanup
+
+```bash
+kubectl delete -f .
 ```

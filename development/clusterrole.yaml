@@ -5,6 +5,16 @@ metadata:
   labels:
     app.kubernetes.io/name: kapsa-operator
 rules:
+  # CRD access (needed by Kopf to discover custom resources)
+  - apiGroups:
+      - apiextensions.k8s.io
+    resources:
+      - customresourcedefinitions
+    verbs:
+      - get
+      - list
+      - watch
+
   # Kapsa CRDs
   - apiGroups:
       - kapsa-project.io

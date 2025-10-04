@@ -1,12 +1,9 @@
 """Main entry point for Kapsa operator."""
 
-import asyncio
-
 import kopf
 
 from kapsa.config import get_settings
 from kapsa.logging import configure_logging, get_logger
-from kapsa.metrics import start_metrics_server
 
 # Import controllers (registers handlers)
 from kapsa.controllers import project  # noqa: F401
@@ -28,12 +25,6 @@ def configure(settings: kopf.OperatorSettings, **_: object) -> None:
     settings.watching.server_timeout = 600
     settings.persistence.finalizer = "kapsa-project.io/finalizer"
 
-    # Start metrics server
-    try:
-        start_metrics_server()
-    except Exception as e:
-        logger.error("metrics_server_start_failed", error=str(e))
-
 
 @kopf.on.cleanup()
 async def cleanup(**_: object) -> None:
@@ -46,7 +37,6 @@ def main() -> None:
     # Run kopf
     kopf.run(
         clusterwide=True,
-        liveness_endpoint="http://0.0.0.0:8080/healthz",
     )
 
 

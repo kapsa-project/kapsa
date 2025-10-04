@@ -119,7 +119,7 @@ kubectl apply -f crds/
 kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.17.0/release-0.17.0.yaml
 
 # OR install cert-manager separately if you prefer
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.18.2/cert-manager.yaml
 ```
 
 For detailed installation instructions, see [Installation Guide](docs/installation.md).

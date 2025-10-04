@@ -50,9 +50,5 @@ USER kapsa
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 
-# Health check endpoint
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD python -c "import socket; s=socket.socket(); s.connect(('localhost', 8080)); s.close()" || exit 1
-
 # Run the operator
-CMD ["kopf", "run", "--all-namespaces", "--liveness=http://0.0.0.0:8080/healthz", "/app/src/kapsa/main.py"]
+CMD ["kopf", "run", "--all-namespaces", "/app/src/kapsa/main.py"]
