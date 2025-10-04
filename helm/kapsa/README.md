@@ -67,20 +67,20 @@ helm install kapsa ./kapsa -f my-values.yaml
 
 ### Key Configuration Options
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `operator.image.repository` | Operator container image | `ghcr.io/kapsa-project/kapsa` |
-| `operator.image.tag` | Operator image tag | `0.1.0` |
-| `operator.replicas` | Number of operator replicas | `1` |
-| `operator.logging.level` | Log level (debug/info/warning/error) | `info` |
-| `operator.reconciliation.defaultPollInterval` | Default git poll interval (seconds) | `300` |
-| `namespace.name` | Operator namespace | `kapsa-system` |
-| `crds.install` | Install CRDs with chart | `true` |
-| `crds.keep` | Keep CRDs on uninstall | `true` |
-| `kpack.namespace` | Namespace where kpack is installed | `kpack` |
-| `certManager.enabled` | Install cert-manager as dependency | `true` |
-| `certManager.installCRDs` | Install cert-manager CRDs | `true` |
-| `monitoring.serviceMonitor.enabled` | Create ServiceMonitor for Prometheus | `false` |
+| Parameter                                     | Description                          | Default                       |
+| --------------------------------------------- | ------------------------------------ | ----------------------------- |
+| `operator.image.repository`                   | Operator container image             | `ghcr.io/kapsa-project/kapsa` |
+| `operator.image.tag`                          | Operator image tag                   | `0.1.0`                       |
+| `operator.replicas`                           | Number of operator replicas          | `1`                           |
+| `operator.logging.level`                      | Log level (debug/info/warning/error) | `info`                        |
+| `operator.reconciliation.defaultPollInterval` | Default git poll interval (seconds)  | `300`                         |
+| `namespace.name`                              | Operator namespace                   | `kapsa-system`                |
+| `crds.install`                                | Install CRDs with chart              | `true`                        |
+| `crds.keep`                                   | Keep CRDs on uninstall               | `true`                        |
+| `kpack.namespace`                             | Namespace where kpack is installed   | `kpack`                       |
+| `certManager.enabled`                         | Install cert-manager as dependency   | `true`                        |
+| `certManager.installCRDs`                     | Install cert-manager CRDs            | `true`                        |
+| `monitoring.serviceMonitor.enabled`           | Create ServiceMonitor for Prometheus | `false`                       |
 
 See [values.yaml](values.yaml) for all configuration options.
 
@@ -89,6 +89,7 @@ See [values.yaml](values.yaml) for all configuration options.
 ### Platform Admin Setup
 
 1. **Create a cert-manager ClusterIssuer** (if not already configured):
+
    ```yaml
    apiVersion: cert-manager.io/v1
    kind: ClusterIssuer
@@ -107,6 +108,7 @@ See [values.yaml](values.yaml) for all configuration options.
    ```
 
 2. **Create a DomainPool**:
+
    ```yaml
    apiVersion: kapsa-project.io/v1alpha1
    kind: DomainPool
@@ -123,6 +125,7 @@ See [values.yaml](values.yaml) for all configuration options.
    ```
 
 3. **Create registry credentials Secret**:
+
    ```bash
    kubectl create secret docker-registry harbor-push-credentials \
      --docker-server=harbor.corp.com \
@@ -132,6 +135,7 @@ See [values.yaml](values.yaml) for all configuration options.
    ```
 
 4. **Create a Registry**:
+
    ```yaml
    apiVersion: kapsa-project.io/v1alpha1
    kind: Registry
@@ -232,22 +236,26 @@ monitoring:
 ## Troubleshooting
 
 ### Check operator logs
+
 ```bash
 kubectl logs -n kapsa-system -l app.kubernetes.io/name=kapsa-operator -f
 ```
 
 ### Verify CRDs
+
 ```bash
 kubectl get crds | grep kapsa-project.io
 ```
 
 ### Check operator status
+
 ```bash
 kubectl get deployment -n kapsa-system kapsa-operator
 kubectl get pods -n kapsa-system
 ```
 
 ### Debug Project reconciliation
+
 ```bash
 kubectl describe project my-app
 kubectl get environments -n my-app-ns

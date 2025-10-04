@@ -13,7 +13,7 @@ The operator watches four Custom Resource Definitions:
 
 ## Project Structure
 
-```
+```txt
 operator/
 ├── src/kapsa/
 │   ├── main.py              # Operator entry point
