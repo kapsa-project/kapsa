@@ -1,11 +1,15 @@
 # Build stage
-FROM python:3.13-slim AS builder
+FROM python:3.12-slim AS builder
 
 WORKDIR /build
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
     git \
+    gcc \
+    g++ \
+    build-essential \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install dependencies to /opt/venv
@@ -15,7 +19,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Runtime stage
-FROM python:3.13-slim
+FROM python:3.12-slim
 
 WORKDIR /app
 
