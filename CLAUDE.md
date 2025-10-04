@@ -132,15 +132,25 @@ Refer to ADRs in `docs/adr/` for detailed rationale. Key decisions:
 
 ## Current State
 
-This is a **documentation-first project**. The architecture and design are defined, but implementation has not started. When implementing:
+The project has moved from documentation-first to active implementation:
 
-1. Start with CRD definitions (v1alpha1)
-2. Implement basic operator reconciliation loop (Kopf)
-3. Integrate kpack for builds
-4. Implement Environment → Deployment/Service/Ingress reconciliation
-5. Add domain allocation from DomainPool
-6. Implement preview environment lifecycle
-7. Add observability (structured logging, Prometheus metrics)
+**✅ Completed:**
+- CRD definitions (v1alpha1) in `crds/`
+- Basic operator scaffolding (Python + Kopf)
+- Structured logging (structlog)
+- Prometheus metrics integration
+- Project CRD controller (create/update/delete/timer handlers)
+- Development manifests for rapid testing
+- Helm chart with operator deployment
+
+**🚧 In Progress / TODO:**
+- Git repository polling implementation
+- kpack Image resource creation
+- Environment CRD controller
+- Kubernetes resource generation (Deployment, Service, Ingress)
+- Domain allocation from DomainPool
+- Preview environment lifecycle management
+- Registry integration
 
 The project follows a modular, incremental approach—each component can be developed and tested independently.
 
@@ -167,16 +177,42 @@ kind delete cluster --name kapsa-dev
 
 ### Working with CRDs
 
-CRD definitions are located in `helm/kapsa/templates/crds/`:
+CRD definitions are located in `crds/` (canonical source):
 
 - `project.yaml` - Developer-facing application definition
 - `environment.yaml` - Operator-managed environment resources
 - `domainpool.yaml` - Cluster-scoped domain configuration
 - `registry.yaml` - Cluster-scoped registry endpoints
 
-### Operator Development (Future)
+CRDs are also bundled in `helm/kapsa/templates/crds/` for Helm installation convenience. When modifying CRDs, edit files in `crds/` first, then copy to helm templates.
 
-The operator directory doesn't exist yet. When implementing:
+### Operator Development
+
+The operator is implemented in `operator/` using Python + Kopf framework.
+
+#### Quick Development Workflow (Recommended)
+
+Use the `development/` manifests for rapid iteration on kind clusters:
+
+```bash
+# 1. Build and deploy
+cd development
+make build-load    # Build image and load into kind
+make deploy        # Deploy to cluster
+
+# 2. Quick iteration
+make dev           # Build, load, restart, and follow logs
+
+# 3. View logs
+make logs
+
+# 4. Clean up
+make clean
+```
+
+See `development/README.md` for detailed instructions.
+
+#### Manual Development Setup
 
 ```bash
 # Set up Python environment
@@ -189,7 +225,10 @@ pip install -r requirements.txt
 pytest
 
 # Build Docker image
-docker build -t kapsa:dev .
+docker build -t kapsa-operator:latest .
+
+# Load into kind cluster
+kind load docker-image kapsa-operator:latest
 ```
 
 ### GitHub Actions

@@ -14,10 +14,13 @@ This Helm chart deploys Kapsa, a Kubernetes-native deployment platform with push
 ### Quick Start
 
 ```bash
-# 1. Install kpack (required - not available as Helm chart)
+# 1. Install CRDs (from repository root)
+kubectl apply -f crds/
+
+# 2. Install kpack (required - not available as Helm chart)
 kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.17.0/release-0.17.0.yaml
 
-# 2. Install Kapsa (cert-manager can be bundled as dependency or installed separately)
+# 3. Install Kapsa (cert-manager can be bundled as dependency or installed separately)
 # Option A: Install Kapsa with cert-manager bundled (default)
 helm install kapsa ./kapsa
 
@@ -25,7 +28,7 @@ helm install kapsa ./kapsa
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
 helm install kapsa ./kapsa --set certManager.enabled=false
 
-# Or install from GitHub Container Registry
+# Or install from GitHub Container Registry (CRDs must be installed first)
 helm install kapsa oci://ghcr.io/kapsa-project/charts/kapsa --version 0.1.0
 ```
 

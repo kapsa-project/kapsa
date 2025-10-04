@@ -103,25 +103,23 @@ See [docs/architecture/](docs/architecture/) for detailed architecture documenta
 ### Prerequisites
 
 - Kubernetes cluster (≥1.30)
-- Helm 3.x
 - kpack installed
 - cert-manager installed
 - Container registry (Harbor, GitLab, etc.)
 
 ### Installation
 
-Install Kapsa using Helm:
+Install Kapsa:
 
 ```bash
-# 1. Install kpack (required - must be installed separately)
-kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.17.0/release-0.17.0.yaml
+# 1. Install CRDs (Custom Resource Definitions)
+kubectl apply -f crds/
 
-# 2. Install Kapsa (can optionally bundle cert-manager via Helm dependency)
-helm install kapsa ./helm/kapsa
+# 2. Install kpack (required - must be installed separately)
+kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.17.0/release-0.17.0.yaml
 
 # OR install cert-manager separately if you prefer
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
-helm install kapsa ./helm/kapsa --set certManager.enabled=false
 ```
 
 For detailed installation instructions, see [Installation Guide](docs/installation.md).
@@ -246,7 +244,6 @@ For detailed installation instructions, see [Installation Guide](docs/installati
 ## Documentation
 
 - **[Installation Guide](docs/installation.md)**: Detailed installation and setup instructions
-- **[Helm Chart](helm/kapsa/README.md)**: Helm chart documentation and configuration
 - **[Vision](docs/project/vision.md)**: Project goals, use cases, roadmap
 - **[Architecture](docs/architecture/)**: System design, components, CRD schemas, sequence diagrams
 - **[ADRs](docs/adr/)**: Architecture Decision Records (001-015)

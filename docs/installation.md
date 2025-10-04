@@ -40,6 +40,35 @@ Before installing Kapsa, ensure you have:
      --create-namespace
    ```
 
+## Install CRDs
+
+Custom Resource Definitions (CRDs) must be installed before the Kapsa operator:
+
+```bash
+# Install from repository root
+kubectl apply -f crds/
+
+# Or install from GitHub (for specific version)
+kubectl apply -f https://raw.githubusercontent.com/kapsa-project/kapsa/main/crds/project.yaml
+kubectl apply -f https://raw.githubusercontent.com/kapsa-project/kapsa/main/crds/environment.yaml
+kubectl apply -f https://raw.githubusercontent.com/kapsa-project/kapsa/main/crds/domainpool.yaml
+kubectl apply -f https://raw.githubusercontent.com/kapsa-project/kapsa/main/crds/registry.yaml
+```
+
+Verify CRD installation:
+
+```bash
+kubectl get crds | grep kapsa-project.io
+```
+
+Expected output:
+```
+domainpools.kapsa-project.io
+environments.kapsa-project.io
+projects.kapsa-project.io
+registries.kapsa-project.io
+```
+
 ## Install Kapsa
 
 ### Option 1: Default Installation
@@ -297,7 +326,7 @@ helm upgrade kapsa ./helm/kapsa -f values.yaml
 
 # CRDs are not automatically upgraded by Helm
 # Upgrade CRDs manually if schema changes:
-kubectl apply -f helm/kapsa/templates/crds/
+kubectl apply -f crds/
 ```
 
 ## Uninstalling

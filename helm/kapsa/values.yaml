@@ -63,8 +63,11 @@ rbac:
   create: true
 
 # CRD installation
+# RECOMMENDED: Install CRDs separately before installing Helm chart
+# kubectl apply -f crds/  (from repository root)
+# CRDs are also bundled in helm/kapsa/templates/crds/ for convenience
 crds:
-  # Install CRDs with Helm (set to false if managing CRDs separately)
+  # Install CRDs with Helm (set to false if already installed separately)
   install: true
   # Keep CRDs on chart uninstall (recommended for production)
   keep: true
@@ -79,9 +82,9 @@ kpack:
 # cert-manager configuration (optional Helm dependency)
 # Can be bundled as dependency or installed separately
 certManager:
-  enabled: true
+  enabled: false
   # If cert-manager is pre-installed, set enabled to false
-  # namespace: cert-manager
+  namespace: cert-manager
   installCRDs: true
 
 # Default DomainPool (optional - can be created post-install)
