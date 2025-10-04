@@ -26,7 +26,7 @@ def configure(settings: kopf.OperatorSettings, **_: object) -> None:
     # Configure kopf settings
     settings.posting.enabled = True
     settings.watching.server_timeout = 600
-    settings.persistence.finalizer = "kapsa.io/finalizer"
+    settings.persistence.finalizer = "kapsa-project.io/finalizer"
 
     # Start metrics server
     try:

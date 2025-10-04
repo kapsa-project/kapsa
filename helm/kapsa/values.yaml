@@ -69,16 +69,18 @@ crds:
   # Keep CRDs on chart uninstall (recommended for production)
   keep: true
 
-# kpack configuration (if bundled as dependency)
+# kpack configuration
+# NOTE: kpack must be installed separately using kubectl apply
+# See: https://github.com/buildpacks-community/kpack/releases
 kpack:
-  enabled: true
-  # If kpack is pre-installed, Kapsa will use it
-  # namespace: kpack
+  # Namespace where kpack is installed (default: kpack)
+  namespace: kpack
 
-# cert-manager configuration (if bundled as dependency)
+# cert-manager configuration (optional Helm dependency)
+# Can be bundled as dependency or installed separately
 certManager:
   enabled: true
-  # If cert-manager is pre-installed, Kapsa will use it
+  # If cert-manager is pre-installed, set enabled to false
   # namespace: cert-manager
   installCRDs: true
 

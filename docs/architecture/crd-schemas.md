@@ -16,7 +16,7 @@ The Project is the primary developer interface. It defines the application, sour
 ### Schema
 
 ```yaml
-apiVersion: kapsa.io/v1alpha1
+apiVersion: kapsa-project.io/v1alpha1
 kind: Project
 metadata:
   name: api-service
@@ -102,13 +102,13 @@ Environment represents a specific deployment target. Created and managed by the 
 ### Schema
 
 ```yaml
-apiVersion: kapsa.io/v1alpha1
+apiVersion: kapsa-project.io/v1alpha1
 kind: Environment
 metadata:
   name: api-service-dev
   namespace: api-service-ns
   ownerReferences:
-    - apiVersion: kapsa.io/v1alpha1
+    - apiVersion: kapsa-project.io/v1alpha1
       kind: Project
       name: api-service
       uid: <project-uid>
@@ -208,7 +208,7 @@ DomainPool defines base domains available for application routing. Managed by pl
 ### Schema
 
 ```yaml
-apiVersion: kapsa.io/v1alpha1
+apiVersion: kapsa-project.io/v1alpha1
 kind: DomainPool
 metadata:
   name: corporate-apps
@@ -267,7 +267,7 @@ Registry defines container registry endpoints and authentication. Managed by pla
 ### Schema
 
 ```yaml
-apiVersion: kapsa.io/v1alpha1
+apiVersion: kapsa-project.io/v1alpha1
 kind: Registry
 metadata:
   name: company-harbor

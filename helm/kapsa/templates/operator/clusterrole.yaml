@@ -10,7 +10,7 @@ metadata:
 rules:
   # Kapsa CRDs
   - apiGroups:
-      - kapsa.io
+      - kapsa-project.io
     resources:
       - projects
       - projects/status

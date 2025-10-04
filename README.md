@@ -12,7 +12,7 @@ Built for organizations that want to provide their developers with a streamlined
 Kapsa transforms Kubernetes into a developer-friendly deployment platform. Developers describe their application with a single custom resource, and Kapsa handles the rest:
 
 ```yaml
-apiVersion: kapsa.io/v1alpha1
+apiVersion: kapsa-project.io/v1alpha1
 kind: Project
 metadata:
   name: my-api
@@ -113,12 +113,15 @@ See [docs/architecture/](docs/architecture/) for detailed architecture documenta
 Install Kapsa using Helm:
 
 ```bash
-# Install Kapsa. Bundles cert-manager and kpack.
+# 1. Install kpack (required - must be installed separately)
+kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.17.0/release-0.17.0.yaml
+
+# 2. Install Kapsa (can optionally bundle cert-manager via Helm dependency)
 helm install kapsa ./helm/kapsa
 
-# If you choose to not install those deps with kapsa, make sure to do it manually.
-kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.13.3/release-0.13.3.yaml
+# OR install cert-manager separately if you prefer
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
+helm install kapsa ./helm/kapsa --set certManager.enabled=false
 ```
 
 For detailed installation instructions, see [Installation Guide](docs/installation.md).
@@ -149,7 +152,7 @@ For detailed installation instructions, see [Installation Guide](docs/installati
 2. **Create a DomainPool**
 
    ```yaml
-   apiVersion: kapsa.io/v1alpha1
+   apiVersion: kapsa-project.io/v1alpha1
    kind: DomainPool
    metadata:
      name: corporate-apps
@@ -166,7 +169,7 @@ For detailed installation instructions, see [Installation Guide](docs/installati
 3. **Create a Registry**
 
    ```yaml
-   apiVersion: kapsa.io/v1alpha1
+   apiVersion: kapsa-project.io/v1alpha1
    kind: Registry
    metadata:
      name: company-harbor
@@ -183,7 +186,7 @@ For detailed installation instructions, see [Installation Guide](docs/installati
 1. **Create a Project**
 
    ```yaml
-   apiVersion: kapsa.io/v1alpha1
+   apiVersion: kapsa-project.io/v1alpha1
    kind: Project
    metadata:
      name: my-app

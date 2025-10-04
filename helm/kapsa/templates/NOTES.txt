@@ -10,7 +10,7 @@ To get started:
    kubectl get pods -n {{ .Values.namespace.name }}
 
 2. Check CRDs are installed:
-   kubectl get crds | grep kapsa.io
+   kubectl get crds | grep kapsa-project.io
 
 {{- if not .Values.kpack.enabled }}
 
@@ -32,7 +32,7 @@ Next steps:
 
 1. Create a DomainPool (platform admin):
    kubectl apply -f - <<EOF
-   apiVersion: kapsa.io/v1alpha1
+   apiVersion: kapsa-project.io/v1alpha1
    kind: DomainPool
    metadata:
      name: default
@@ -48,7 +48,7 @@ Next steps:
 
 2. Create a Registry (platform admin):
    kubectl apply -f - <<EOF
-   apiVersion: kapsa.io/v1alpha1
+   apiVersion: kapsa-project.io/v1alpha1
    kind: Registry
    metadata:
      name: default
@@ -62,7 +62,7 @@ Next steps:
 
 3. Create your first Project (developer):
    kubectl apply -f - <<EOF
-   apiVersion: kapsa.io/v1alpha1
+   apiVersion: kapsa-project.io/v1alpha1
    kind: Project
    metadata:
      name: my-app

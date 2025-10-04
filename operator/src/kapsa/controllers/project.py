@@ -13,7 +13,7 @@ from kapsa.metrics import project_reconcile_duration, project_reconcile_total, p
 logger = get_logger(__name__)
 
 
-@kopf.on.create("kapsa.io", "v1alpha1", "projects")
+@kopf.on.create("kapsa-project.io", "v1alpha1", "projects")
 async def project_created(
     spec: Dict[str, Any],
     name: str,
@@ -49,7 +49,7 @@ async def project_created(
     }
 
 
-@kopf.on.update("kapsa.io", "v1alpha1", "projects")
+@kopf.on.update("kapsa-project.io", "v1alpha1", "projects")
 async def project_updated(
     spec: Dict[str, Any],
     status: Dict[str, Any],
@@ -108,7 +108,7 @@ async def project_updated(
             }
 
 
-@kopf.on.delete("kapsa.io", "v1alpha1", "projects")
+@kopf.on.delete("kapsa-project.io", "v1alpha1", "projects")
 async def project_deleted(
     name: str,
     namespace: str,
@@ -125,7 +125,7 @@ async def project_deleted(
     await delete_project_namespace(name, namespace)
 
 
-@kopf.timer("kapsa.io", "v1alpha1", "projects", interval=300, idle=60)
+@kopf.timer("kapsa-project.io", "v1alpha1", "projects", interval=300, idle=60)
 async def project_poll_git(
     spec: Dict[str, Any],
     status: Dict[str, Any],
@@ -172,11 +172,11 @@ async def create_project_namespace(
         metadata=client.V1ObjectMeta(
             name=namespace_name,
             labels={
-                "kapsa.io/project": project_name,
-                "kapsa.io/managed-by": "kapsa-operator",
+                "kapsa-project.io/project": project_name,
+                "kapsa-project.io/managed-by": "kapsa-operator",
             },
             annotations={
-                "kapsa.io/parent-namespace": parent_namespace,
+                "kapsa-project.io/parent-namespace": parent_namespace,
             },
         )
     )

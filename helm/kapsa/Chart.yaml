@@ -20,15 +20,9 @@ sources:
 
 maintainers:
   - name: Kapsa Team
-    email: maintainers@kapsa.io
+    email: maintainers@kapsa-project.io
 
 dependencies:
-  # kpack is required for building images
-  - name: kpack
-    version: "0.13.0"
-    repository: "https://github.com/buildpacks-community/kpack/releases"
-    condition: kpack.enabled
-
   # cert-manager is required for TLS
   - name: cert-manager
     version: "v1.15.0"

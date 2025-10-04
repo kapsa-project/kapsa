@@ -222,7 +222,7 @@ helm upgrade kapsa ../helm/kapsa \
 
 ```bash
 # Watch all Kapsa events
-kubectl get events --all-namespaces --field-selector involvedObject.apiVersion=kapsa.io/v1alpha1 -w
+kubectl get events --all-namespaces --field-selector involvedObject.apiVersion=kapsa-project.io/v1alpha1 -w
 
 # Watch Project events
 kubectl get events --field-selector involvedObject.kind=Project -w
@@ -278,7 +278,7 @@ See [Development Documentation](../docs/development/) for contribution guideline
 Check CRDs are installed:
 
 ```bash
-kubectl get crds | grep kapsa.io
+kubectl get crds | grep kapsa-project.io
 ```
 
 ### Reconciliation not working

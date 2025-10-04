@@ -15,13 +15,22 @@ Before installing Kapsa, ensure you have:
    ```
 
 3. **kpack** (for building container images)
+
+   kpack must be installed separately as it's not available as a Helm chart:
    ```bash
-   kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.13.3/release-0.13.3.yaml
+   kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.17.0/release-0.17.0.yaml
    ```
 
 4. **cert-manager** (for TLS certificates)
+
+   cert-manager can be bundled with Kapsa (default) or installed separately:
    ```bash
+   # Option A: Let Kapsa install cert-manager via Helm dependency (recommended)
+   # No action needed - installed automatically with Kapsa
+
+   # Option B: Install manually and disable Kapsa's bundled cert-manager
    kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
+   # Then install Kapsa with: --set certManager.enabled=false
    ```
 
 5. **Ingress Controller** (NGINX recommended)
@@ -97,13 +106,13 @@ kubectl get deployment -n kapsa-system
 kubectl get pods -n kapsa-system
 
 # Check CRDs
-kubectl get crds | grep kapsa.io
+kubectl get crds | grep kapsa-project.io
 
 # Expected output:
-# domainpools.kapsa.io
-# environments.kapsa.io
-# projects.kapsa.io
-# registries.kapsa.io
+# domainpools.kapsa-project.io
+# environments.kapsa-project.io
+# projects.kapsa-project.io
+# registries.kapsa-project.io
 
 # Check operator logs
 kubectl logs -n kapsa-system -l app.kubernetes.io/name=kapsa-operator -f
@@ -138,7 +147,7 @@ kubectl apply -f clusterissuer.yaml
 ### 2. Create a DomainPool
 
 ```yaml
-apiVersion: kapsa.io/v1alpha1
+apiVersion: kapsa-project.io/v1alpha1
 kind: DomainPool
 metadata:
   name: corporate-apps
@@ -196,7 +205,7 @@ kubectl create secret docker-registry dockerhub-credentials \
 ### 4. Create a Registry
 
 ```yaml
-apiVersion: kapsa.io/v1alpha1
+apiVersion: kapsa-project.io/v1alpha1
 kind: Registry
 metadata:
   name: company-harbor
@@ -237,7 +246,7 @@ kubectl get registry company-harbor -o yaml
 Create your first Project:
 
 ```yaml
-apiVersion: kapsa.io/v1alpha1
+apiVersion: kapsa-project.io/v1alpha1
 kind: Project
 metadata:
   name: hello-world
@@ -299,10 +308,10 @@ helm uninstall kapsa
 
 # CRDs are retained by default (helm.sh/resource-policy: keep)
 # To remove CRDs and all Projects/Environments:
-kubectl delete crd projects.kapsa.io
-kubectl delete crd environments.kapsa.io
-kubectl delete crd domainpools.kapsa.io
-kubectl delete crd registries.kapsa.io
+kubectl delete crd projects.kapsa-project.io
+kubectl delete crd environments.kapsa-project.io
+kubectl delete crd domainpools.kapsa-project.io
+kubectl delete crd registries.kapsa-project.io
 
 # Remove namespace
 kubectl delete namespace kapsa-system

@@ -14,12 +14,16 @@ This Helm chart deploys Kapsa, a Kubernetes-native deployment platform with push
 ### Quick Start
 
 ```bash
-# Add dependencies (if not already installed)
-kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.13.3/release-0.13.3.yaml
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
+# 1. Install kpack (required - not available as Helm chart)
+kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.17.0/release-0.17.0.yaml
 
-# Install Kapsa from local chart
+# 2. Install Kapsa (cert-manager can be bundled as dependency or installed separately)
+# Option A: Install Kapsa with cert-manager bundled (default)
 helm install kapsa ./kapsa
+
+# Option B: Install cert-manager separately
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.0/cert-manager.yaml
+helm install kapsa ./kapsa --set certManager.enabled=false
 
 # Or install from GitHub Container Registry
 helm install kapsa oci://ghcr.io/kapsa-project/charts/kapsa --version 0.1.0
@@ -65,7 +69,7 @@ helm install kapsa ./kapsa -f my-values.yaml
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `operator.image.repository` | Operator container image | `ghcr.io/yourorg/kapsa-operator` |
+| `operator.image.repository` | Operator container image | `ghcr.io/kapsa-project/kapsa` |
 | `operator.image.tag` | Operator image tag | `0.1.0` |
 | `operator.replicas` | Number of operator replicas | `1` |
 | `operator.logging.level` | Log level (debug/info/warning/error) | `info` |
@@ -73,6 +77,9 @@ helm install kapsa ./kapsa -f my-values.yaml
 | `namespace.name` | Operator namespace | `kapsa-system` |
 | `crds.install` | Install CRDs with chart | `true` |
 | `crds.keep` | Keep CRDs on uninstall | `true` |
+| `kpack.namespace` | Namespace where kpack is installed | `kpack` |
+| `certManager.enabled` | Install cert-manager as dependency | `true` |
+| `certManager.installCRDs` | Install cert-manager CRDs | `true` |
 | `monitoring.serviceMonitor.enabled` | Create ServiceMonitor for Prometheus | `false` |
 
 See [values.yaml](values.yaml) for all configuration options.
@@ -101,7 +108,7 @@ See [values.yaml](values.yaml) for all configuration options.
 
 2. **Create a DomainPool**:
    ```yaml
-   apiVersion: kapsa.io/v1alpha1
+   apiVersion: kapsa-project.io/v1alpha1
    kind: DomainPool
    metadata:
      name: corporate-apps
@@ -126,7 +133,7 @@ See [values.yaml](values.yaml) for all configuration options.
 
 4. **Create a Registry**:
    ```yaml
-   apiVersion: kapsa.io/v1alpha1
+   apiVersion: kapsa-project.io/v1alpha1
    kind: Registry
    metadata:
      name: company-harbor
@@ -146,7 +153,7 @@ See [values.yaml](values.yaml) for all configuration options.
 Create a Project:
 
 ```yaml
-apiVersion: kapsa.io/v1alpha1
+apiVersion: kapsa-project.io/v1alpha1
 kind: Project
 metadata:
   name: my-api
@@ -195,10 +202,10 @@ helm uninstall kapsa
 
 # CRDs are kept by default (helm.sh/resource-policy: keep)
 # To remove CRDs manually:
-kubectl delete crd projects.kapsa.io
-kubectl delete crd environments.kapsa.io
-kubectl delete crd domainpools.kapsa.io
-kubectl delete crd registries.kapsa.io
+kubectl delete crd projects.kapsa-project.io
+kubectl delete crd environments.kapsa-project.io
+kubectl delete crd domainpools.kapsa-project.io
+kubectl delete crd registries.kapsa-project.io
 ```
 
 ## Monitoring
@@ -231,7 +238,7 @@ kubectl logs -n kapsa-system -l app.kubernetes.io/name=kapsa-operator -f
 
 ### Verify CRDs
 ```bash
-kubectl get crds | grep kapsa.io
+kubectl get crds | grep kapsa-project.io
 ```
 
 ### Check operator status
