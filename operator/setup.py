@@ -21,10 +21,6 @@ setup(
     ],
     extras_require={
         "dev": [
-            "pytest>=8.2.0",
-            "pytest-asyncio>=0.23.6",
-            "pytest-cov>=5.0.0",
-            "pytest-mock>=3.14.0",
             "black>=24.4.2",
             "ruff>=0.4.3",
             "mypy>=1.10.0",

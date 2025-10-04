@@ -224,13 +224,6 @@ spec:
     issuerRef:
       name: letsencrypt-prod
       kind: ClusterIssuer
-    challengeType: http01 # "http01" or "dns01"
-
-  # Optional: DNS provider config for dns01 challenge
-  dnsProvider:
-    name: cloudflare
-    credentialsSecretRef:
-      name: cloudflare-api-token
 
   # Allocation policy
   allocationPolicy:
@@ -255,8 +248,7 @@ status:
 ### Key Fields
 
 - **`spec.baseDomains[]`**: Available base domains (e.g., `apps.corp.com`)
-- **`spec.certManager.issuerRef`**: Reference to cert-manager ClusterIssuer
-- **`spec.certManager.challengeType`**: ACME challenge type (HTTP-01 or DNS-01)
+- **`spec.certManager.issuerRef`**: Reference to cert-manager ClusterIssuer or Issuer (challenge type configured in the issuer itself)
 - **`spec.allocationPolicy`**: Rules for domain allocation
 - **`status.allocations[]`**: Currently allocated subdomains
 

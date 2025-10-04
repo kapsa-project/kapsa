@@ -20,10 +20,12 @@ spec:
   repository:
     url: https://github.com/myorg/my-api
     branch: main
+    pollInterval: 300
   build:
     strategy: buildpack
   registry:
     name: company-harbor
+    imageRepository: myteam/my-api
   domain:
     subdomain: api
     domainPoolRef: corporate-apps
@@ -113,7 +115,7 @@ Install Kapsa:
 
 ```bash
 # 1. Install CRDs (Custom Resource Definitions)
-kubectl apply -f crds/
+kubectl apply -f operator/crds/
 
 # 2. Install kpack (required - must be installed separately)
 kubectl apply -f https://github.com/buildpacks-community/kpack/releases/download/v0.17.0/release-0.17.0.yaml
@@ -161,7 +163,6 @@ For detailed installation instructions, see [Installation Guide](docs/installati
        issuerRef:
          name: letsencrypt-prod
          kind: ClusterIssuer
-       challengeType: http01
    ```
 
 3. **Create a Registry**

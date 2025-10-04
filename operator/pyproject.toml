@@ -40,16 +40,3 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "kubernetes.*"
 ignore_missing_imports = true
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-asyncio_mode = "auto"
-addopts = [
-    "--strict-markers",
-    "--cov=src/kapsa",
-    "--cov-report=term-missing",
-    "--cov-report=html",
-]

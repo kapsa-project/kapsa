@@ -80,44 +80,6 @@ operator/
    kopf run --all-namespaces --verbose src/kapsa/main.py
    ```
 
-### Testing
-
-```bash
-# Run all tests
-pytest
-
-# Run only unit tests
-pytest tests/unit/
-
-# Run specific controller tests
-pytest tests/unit/test_project_controller.py
-pytest tests/unit/test_environment_controller.py
-pytest tests/unit/test_registry_controller.py
-pytest tests/unit/test_domainpool_controller.py
-
-# Run with coverage
-pytest --cov=src/kapsa --cov-report=html --cov-report=term-missing
-
-# Run with verbose output
-pytest -v
-
-# Run tests matching a pattern
-pytest -k "test_project_created"
-
-# Run tests with specific markers
-pytest -m unit
-```
-
-View coverage report:
-
-```bash
-# Open HTML coverage report
-open htmlcov/index.html  # macOS
-xdg-open htmlcov/index.html  # Linux
-```
-
-### Code Quality
-
 ```bash
 # Format code
 black .
@@ -275,8 +237,6 @@ kubectl get environments --all-namespaces
 - Configuration management
 - Namespace creation per project
 - Git polling timer (stub)
-- Comprehensive unit test suite
-- Test fixtures and mocking infrastructure
 
 ### 🚧 In Progress / TODO
 
@@ -288,6 +248,8 @@ kubectl get environments --all-namespaces
 - Registry credential validation
 - Secret propagation to project namespaces
 - Integration tests
+- Comprehensive unit test suite
+- Test fixtures and mocking infrastructure
 
 ## Contributing
 

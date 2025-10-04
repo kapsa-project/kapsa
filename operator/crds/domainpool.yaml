@@ -45,32 +45,14 @@ spec:
                       properties:
                         name:
                           type: string
+                          description: Name of the cert-manager ClusterIssuer or Issuer
                         kind:
                           type: string
                           enum:
                             - ClusterIssuer
                             - Issuer
-                    challengeType:
-                      type: string
-                      enum:
-                        - http01
-                        - dns01
-                      default: http01
-                dnsProvider:
-                  type: object
-                  description: DNS provider config for dns01 challenge
-                  properties:
-                    name:
-                      type: string
-                    credentialsSecretRef:
-                      type: object
-                      required:
-                        - name
-                      properties:
-                        name:
-                          type: string
-                        namespace:
-                          type: string
+                          default: ClusterIssuer
+                          description: Type of cert-manager issuer
                 allocationPolicy:
                   type: object
                   properties:
